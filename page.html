@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: beige; 
+            padding-top: 50px;
+        }
+        .center-table {
+            margin: 0 auto;
+            width: 90%;
+        }
+        .table {
+            border: 2px solid #000;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .table thead th {
+            border-bottom: 2px solid #000;
+        }
+        .table td, .table th {
+            border: 2px solid #000;
+            vertical-align: middle;
+            padding: 15px;
+        }
+        .btn-primary {
+            margin-top: 10px;
+        }
+        .red-column {
+            color: red;
+        }
+        .black-column {
+            color: black;
+        }
+    </style>
+    <title>CPU Scheduler</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">CPU Scheduler</h1> 
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="table-responsive center-table">
+                    <table class="table table-striped text-success">
+                        <thead class="border-light">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col" class="red-column"><strong>ArrivalTime-Average</strong></th>
+                                <th scope="col" class="red-column"><strong>Burstime-Average</strong></th>
+                                <th scope="col" class="red-column"><strong>FinishTime-Average</strong></th>
+                                <th scope="col" class="red-column"><strong>TurnaroundTime-Average</strong></th>
+                                <th scope="col" class="red-column"><strong>WaitTime-Average</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function fetchDataAndPopulateTable() {
+            try {
+                const response = await fetch('output.txt');
+                const data = await response.text();
+                const values = data.trim().split('\n');
+
+                const tableBody = document.getElementById('table-body');
+                let rowIndex = 0;
+                const rowNames = ['First Come First Serve', 'Shortest Job First', 'Priority Scheduling', 'Round Robin'];
+
+                for (let i = 0; i < values.length; i += 5) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <th scope="row" class="black-column">${rowNames[rowIndex]}</th>
+                        <td>${values[i]}</td>
+                        <td>${values[i + 1]}</td>
+                        <td>${values[i + 2]}</td>
+                        <td>${values[i + 3]}</td>
+                        <td>${values[i + 4]}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                    rowIndex++;
+                }
+            } catch (error) {
+                console.error('Error fetching the data:', error);
+            }
+        }
+
+        window.onload = fetchDataAndPopulateTable;
+    </script>
+</body>
+</html>
